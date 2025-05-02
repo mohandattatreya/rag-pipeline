@@ -1,0 +1,19 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# SQLite Database Files
+*.db
+
+# Virtual environments
+.venv
+DE_2022.json
+DE_2022_derived.json
+llm_bootcamp.pdf
+.jar
+LICENSE_scala-library-2.13.16.txt
+NOTICE_scala-library-2.13.16.txt

@@ -1,0 +1,68 @@
+[project]
+name = "rag-pipeline"
+version = "0.1.0"
+description = "RAG Pipeline with SQLite, Qdrant, Ollama, and Streamlit"
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    # Core Data/Config
+    "sqlalchemy>=2.0",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0",
+    # Vector DB & Embeddings
+    "qdrant-client>=1.9",
+    "sentence-transformers>=2.2",
+    # Numpy is usually a transitive dependency, but can be listed if needed
+    # "numpy>=1.20",
+    # LLM Interface
+    "requests>=2.28",
+    # CLI
+    "typer[all]>=0.9",
+    "streamlit>=1.45.0",
+    "uvicorn>=0.34.2",
+    "fastapi>=0.115.12",
+]
+
+[project.optional-dependencies]
+# pdf = [
+#     "pypdf>=4.0",
+# ]
+# Uncomment and define API dependencies
+api = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29", # standard includes websockets etc.
+]
+
+# For Streamlit UI
+app = [
+    "streamlit>=1.30",
+]
+
+# For Reranking functionality
+reranker = [
+    "sentence-transformers>=2.2",
+    # Transformers is often a dependency, add if specific reranker model needs it directly
+    # "transformers>=4.30",
+]
+
+[project.scripts]
+rag-cli = "src.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "pytest>=8.3.3",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]

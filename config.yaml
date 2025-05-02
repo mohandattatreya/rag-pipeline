@@ -1,0 +1,79 @@
+# Configuration for the RAG Pipeline
+
+# SQLite Database Configuration
+database:
+  db_path: "rag_pipeline.db" # Relative path to the SQLite database file
+
+# Qdrant Vector Database Configuration
+qdrant:
+  # Option 1: Local Docker instance
+  url: "http://localhost:6333"
+  api_key: null # Not typically required for local instance
+  mount_dir: "./qdrant_storage" # Directory to mount for local Qdrant persistence
+  collection_name: "text_chunks"
+  prefer_grpc: false # Set to true for potentially better performance if qdrant-client[grpc] is installed
+
+
+# Embedding Model Configuration
+embedding:
+  model_name: "sentence-transformers/all-mpnet-base-v2" # Hugging Face model name
+  # model_name: "sentence-transformers/all-MiniLM-L6-v2" # Alternative smaller model
+
+# Text Chunking Configuration
+chunking:
+  chunk_size: 512 # Target size for text chunks (implementation specific, e.g., characters, tokens)
+  chunk_overlap: 50  # Overlap between consecutive chunks 
+
+# LLM Configuration
+llm:
+  provider: "ollama" # Currently only supports "ollama"
+  model_name: "llama3:latest" # Ensure this model is pulled and served by Ollama
+  api_base_url: "http://localhost:11434"
+  # Specific phrase the LLM should return if it cannot answer
+  cannot_answer_phrase: "Based on the provided text, I cannot answer this question."
+
+# Prompt Template Configuration (Dictionary)
+prompts:
+  gatsby:
+    template: >
+      You are an AI assistant answering questions about the novel "The Great Gatsby".
+      Use the provided text context below as your primary source of information.
+      Synthesize the information found in the context to answer the user's question comprehensively.
+      You can make reasonable inferences based *only* on the information present in the context.
+      Do not use any external knowledge.
+
+      If the provided context does not contain enough information to answer the question, explain briefly why you cannot answer based on the text provided.
+      
+      Context:
+      ---
+      {context}
+      ---
+      
+      Question: {question}
+      
+      Answer:
+      
+  financial_analyst:
+    template: >
+      You are a financial analyst AI assistant.
+      Analyze the provided financial text context to answer the user's question.
+      Focus on extracting key figures, trends, and strategic information relevant to financial performance.
+      Base your answer strictly on the provided context. Do not use external financial knowledge or current market data.
+      
+      If the context lacks the specific information needed, state that clearly and explain what information is missing.
+      
+      Context:
+      ---
+      {context}
+      ---
+      
+      Question: {question}
+      
+      Answer:
+
+# --- Optional Settings --- #
+
+# JSON Directory Ingestion Configuration (Optional)
+json_ingestion:
+  input_directory: "/home/mohan/md-chunks"  # REQUIRED: Path to directory containing JSON chunk files
+  file_limit: 100                 # OPTIONAL: Max number of JSON files to process (null or omit for no limit)
