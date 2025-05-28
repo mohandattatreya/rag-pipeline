@@ -8,6 +8,7 @@ wheels/
 
 # SQLite Database Files
 *.db
+rag_pipeline.db
 
 # Virtual environments
 .venv
@@ -17,3 +18,9 @@ llm_bootcamp.pdf
 .jar
 LICENSE_scala-library-2.13.16.txt
 NOTICE_scala-library-2.13.16.txt
+
+# Configuration files with secrets
+config.yaml
+.env
+
+# Jupyter Notebook files & checkpoints

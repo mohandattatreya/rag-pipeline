@@ -1,0 +1,69 @@
+# Configuration for the RAG Pipeline
+
+# SQLite Database Configuration
+database:
+  db_path: "rag_pipeline.db" # Relative path to the SQLite database file
+
+# Qdrant Vector Database Configuration
+qdrant:
+  # Option 1: Local Docker instance
+  url: "http://localhost:6333"
+  api_key: null # Not typically required for local instance
+  mount_dir: "./qdrant_storage" # Directory to mount for local Qdrant persistence
+  collection_name: "text_chunks"
+  prefer_grpc: false # Set to true for potentially better performance if qdrant-client[grpc] is installed
+
+
+# Embedding Model Configuration
+embedding:
+  model_name: "sentence-transformers/all-mpnet-base-v2" # Hugging Face model name
+  # model_name: "sentence-transformers/all-MiniLM-L6-v2" # Alternative smaller model
+
+# Text Chunking Configuration
+chunking:
+  chunk_size: 500
+  chunk_overlap: 50
+
+# LLM Configuration
+llm:
+  default_provider: "ollama"
+  providers:
+    ollama:
+      model_name: "qwen2:7b"
+      api_base_url: "http://localhost:11434"
+      request_timeout: 300  # 5 minutes timeout
+    openai:
+      model_name: "gpt-4o-mini"
+      api_key: "YOUR_NEW_OPENAI_API_KEY_HERE_REPLACE_AND_RENAME_TO_CONFIG.YAML" # Placeholder
+
+# Prompt Template Configuration (Dictionary)
+prompts:
+  financial_analyst:
+    template: >
+      You are a financial analyst assistant. Use the following context to answer the question. 
+      If the context doesn't contain enough information to answer the question, say so.
+      If you need to compare financial metrics across different years, make sure to highlight the changes.
+      If you need to analyze trends, explain the implications.
+      
+      Context:
+      {context}
+      
+      Question: {question}
+      
+      Answer:
+  default: # Adding a simple default prompt as an example
+    template: >
+      Answer the question based on the following context:
+      Context:
+      {context}
+
+      Question: {question}
+
+      Answer:
+
+# --- Optional Settings --- #
+
+# JSON Directory Ingestion Configuration (Optional)
+json_ingestion:
+  input_directory: "/home/mohan/md-chunks"  # REQUIRED: Path to directory containing JSON chunk files
+  file_limit: 100                 # OPTIONAL: Max number of JSON files to process (null or omit for no limit) 
