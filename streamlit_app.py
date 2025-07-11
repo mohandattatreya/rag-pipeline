@@ -59,7 +59,16 @@ if submit_button and user_question:
                 st.divider()
                 st.subheader(f"Sources ({len(source_chunks)} Chunks Used)")
                 for i, chunk in enumerate(source_chunks):
-                    with st.expander(f"Source {i+1}: Chunk ID {chunk.get('sql_chunk_id', 'N/A')} (Score: {chunk.get('rerank_score', chunk.get('initial_score', None)):.4f})"):
+                    # Safely format the score; handle missing values gracefully
+                    score_value = chunk.get('rerank_score', chunk.get('initial_score'))
+                    if isinstance(score_value, (float, int)):
+                        score_str = f"{score_value:.4f}"
+                    else:
+                        score_str = "N/A"
+
+                    with st.expander(
+                        f"Source {i+1}: Chunk ID {chunk.get('sql_chunk_id', 'N/A')} (Score: {score_str})"
+                    ):
                         st.markdown(f"**Document:** `{chunk.get('qdrant_payload', {}).get('doc_name', 'N/A')}`")
                         st.markdown(f"**Chunk Number in Doc:** `{chunk.get('chunk_number', 'N/A')}`")
                         # Use markdown with triple backticks for code block appearance
